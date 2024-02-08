@@ -1,14 +1,36 @@
-// ROS 2 C++ library for using ROS 2 functionalities.
-#include <rclcpp/rclcpp.hpp>
+/**
+ * @file echo_node.cpp
+ * @brief Demonstrates a simple ROS 2 node in C++ that logs a message.
+ *
+ * This program initializes a ROS 2 node, logs a greeting message, and then
+ * spins the node to keep it alive until it is manually terminated or receives
+ * a shutdown signal.
+ */
 
+#include <rclcpp/rclcpp.hpp>  // Include the necessary header to use the ROS 2 C++ client library
+
+/**
+ * @brief Main function that initializes a ROS 2 node and logs a message.
+ *
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line arguments.
+ * @return int Execution status code. Returns 0 on successful execution.
+ */
 int main(int argc, char* argv[]) {
-  // 1. Initialize the ROS 2 communication system.
+  // Initialize the ROS 2 system
   rclcpp::init(argc, argv);
-  // 2. Create a shared pointer to a new node named
+
+  // Create a shared pointer to a new node named "echo_node_cpp"
   auto node = rclcpp::Node::make_shared("echo_node_cpp");
+
+  // Log a message including the node name using the node's logger
   RCLCPP_INFO(node->get_logger(), "Hello from %s", node->get_name());
-  // Log a "Hello, world!" message.RCLCPP_INFO(
+
+  // Spin the node so it can perform its work (e.g., processing callbacks)
   rclcpp::spin(node);
-  // 3. Shutdown the ROS 2 communication system before exiting the program.
+
+  // Shutdown the ROS 2 system before exiting the program
   rclcpp::shutdown();
+
+  return 0;  // Indicate successful execution
 }

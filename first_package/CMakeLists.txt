@@ -44,6 +44,7 @@ SCRIPTS_DESTINATION lib/${PROJECT_NAME})
 install(PROGRAMS
   script/minimal_node.py
   script/advanced_node.py
+  script/publisher_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
