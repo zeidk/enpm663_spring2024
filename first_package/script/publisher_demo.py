@@ -5,6 +5,12 @@ This script initializes a ROS2 node using rclpy, which publishes messages using 
 The PublisherNode is defined in the first_package package, and it is responsible for publishing messages
 to a topic as defined within its implementation. This script is an entry point for running the publisher node,
 setting it up, spinning it to keep it alive and processing data, and properly shutting it down afterwards.
+
+Usage:
+    To run this script, use the following command in a terminal:
+    ```
+    ros2 run first_package publisher_demo.py
+    ```
 """
 # Import ROS Client Library for Python
 import rclpy

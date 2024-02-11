@@ -20,13 +20,13 @@ include_directories(include)
 
 add_executable(minimal_demo_cpp src/minimal_demo.cpp)
 add_executable(advanced_demo_cpp src/advanced_demo.cpp)
-# add_executable(publisher_demo_cpp src/publisher_demo.cpp)
+add_executable(publisher_demo_cpp src/publisher_demo.cpp)
 # add_executable(subscriber_demo_cpp src/subscriber_demo.cpp)
 
 # add dependencies
 ament_target_dependencies(minimal_demo_cpp rclcpp)
 ament_target_dependencies(advanced_demo_cpp rclcpp)
-# ament_target_dependencies(publisher_demo_cpp rclcpp std_msgs)
+ament_target_dependencies(publisher_demo_cpp rclcpp std_msgs)
 # ament_target_dependencies(subscriber_demo_cpp rclcpp std_msgs)
 
 
@@ -34,7 +34,7 @@ ament_target_dependencies(advanced_demo_cpp rclcpp)
 install(TARGETS
   minimal_demo_cpp
   advanced_demo_cpp
-  # publisher_demo_cpp
+  publisher_demo_cpp
   # subscriber_demo_cpp
   DESTINATION lib/${PROJECT_NAME}
 )
@@ -51,7 +51,7 @@ install(PROGRAMS
   script/minimal_demo.py
   script/advanced_demo.py
   script/publisher_demo.py
-  # script/subscriber_demo.py
+  script/subscriber_demo.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
