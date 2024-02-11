@@ -1,3 +1,5 @@
 # ignore .vscode
 .vscode
 first_package.zip
+first_package/src/minimal_demo.cpp
+first_package/first_package/script/minimal_demo.py
