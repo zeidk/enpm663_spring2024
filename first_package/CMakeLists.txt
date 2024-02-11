@@ -50,7 +50,7 @@ ament_python_install_package(${PROJECT_NAME} SCRIPTS_DESTINATION lib/${PROJECT_N
 install(PROGRAMS
   script/minimal_demo.py
   script/advanced_demo.py
-  # script/publisher_demo.py
+  script/publisher_demo.py
   # script/subscriber_demo.py
   DESTINATION lib/${PROJECT_NAME}
 )
