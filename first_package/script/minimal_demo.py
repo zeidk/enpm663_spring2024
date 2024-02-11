@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+This script initializes and runs a ROS2 node using rclpy. The node implemented in this script is from rclpy.node.Node class.
+
+Usage:
+    This script is intended to be run from the command line. It does not take any command-line arguments.
+    To run the script, use the following command:
+
+    $ ros2 run first_package minimal_demo.py
+"""
+
 # Import the ROS2 Python client library
 import rclpy
 # Import the Node class from the rclpy.node module
