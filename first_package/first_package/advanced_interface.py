@@ -21,9 +21,6 @@ class AdvancedNode(Node):
         Args:
             node_name (str): The name of the node, passed to the parent Node class's constructor.
         """
-        # Initialize the superclass (Node) with the provided node_name.
-        super().__init__(
-            node_name
-        )  
+        super().__init__(node_name)  
         # Log a greeting message indicating successful node creation.
         self.get_logger().info(f"Hello from {self.get_name()}")

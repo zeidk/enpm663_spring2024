@@ -30,7 +30,7 @@ def main(args=None):
     """
     rclpy.init(args=args)  # Initialize the ROS client library
     node = PublisherNode("publisher_py")  # Create an instance of the PublisherNode
-    rclpy.spin(node)  # Keep the node alive to listen for incoming data or events
+    rclpy.spin(node)  # Keep the node alive to 
     node.destroy_node()  # Properly destroy the node once it's no longer needed
     rclpy.shutdown()  # Shutdown the ROS client library
 
