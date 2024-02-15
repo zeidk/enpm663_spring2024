@@ -30,9 +30,16 @@ def main(args=None):
     """
     rclpy.init(args=args)  # Initialize the ROS client library
     node = PublisherNode("publisher_py")  # Create an instance of the PublisherNode
-    rclpy.spin(node)  # Keep the node alive to 
-    node.destroy_node()  # Properly destroy the node once it's no longer needed
-    rclpy.shutdown()  # Shutdown the ROS client library
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        # Log a message when the node is manually terminated
+        node.get_logger().warn("Keyboard interrupt detected")
+    finally:
+        # Cleanly destroy the node instance
+        node.destroy_node()
+        # Shut down the ROS 2 Python client library
+        rclpy.shutdown()
 
 
 if __name__ == "__main__":

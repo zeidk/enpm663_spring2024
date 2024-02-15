@@ -46,11 +46,16 @@ def main(args=None):
     # Create a new instance of SubscriberNode named 'subscriber_py'
     node = SubscriberNode("subscriber_py")
     # Keep the node alive and processing data until shutdown
-    rclpy.spin(node)
-    # Cleanly destroy the node instance
-    node.destroy_node()
-    # Shut down the ROS 2 Python client library
-    rclpy.shutdown()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        # Log a message when the node is manually terminated
+        node.get_logger().warn("Keyboard interrupt detected")
+    finally:
+        # Cleanly destroy the node instance
+        node.destroy_node()
+        # Shut down the ROS 2 Python client library
+        rclpy.shutdown()
 
 
 if __name__ == "__main__":

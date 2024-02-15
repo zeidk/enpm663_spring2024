@@ -22,7 +22,7 @@ include_directories(include)
 add_executable(minimal_demo_cpp src/minimal_demo.cpp)
 add_executable(advanced_demo_cpp src/advanced_demo.cpp)
 add_executable(publisher_demo_cpp src/publisher_demo.cpp)
-add_executable(subscriber_demo_cpp src/publisher_demo.cpp)
+add_executable(subscriber_demo_cpp src/subscriber_demo.cpp)
 
 
 

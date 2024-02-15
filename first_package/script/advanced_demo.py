@@ -34,9 +34,14 @@ def main(args=None):
     node = AdvancedNode("advanced_py")
     # Keep the node alive to listen for callbacks
     # Note: This function is not necessary for the current implementation, but it is included for demonstration purposes
-    rclpy.spin(node)
-    # Shutdown the ROS2 Python client library on node termination
-    rclpy.shutdown()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        # Log a message when the node is manually terminated
+        node.get_logger().warn("Keyboard interrupt detected")
+    finally:
+        # Shut down the ROS 2 Python client library
+        rclpy.shutdown()
 
 
 if __name__ == "__main__":
