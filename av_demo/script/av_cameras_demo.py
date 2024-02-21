@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
-from av_demo.av_actions_interface import AVActionsInterface
+from av_demo.av_cameras_interface import AVCamerasInterface
 
 
 def main(args=None):
@@ -12,7 +12,7 @@ def main(args=None):
         args (list, optional): Command-line arguments passed to the node. Defaults to None.
     """
     rclpy.init(args=args)
-    node = AVActionsInterface("av_actions")
+    node = AVCamerasInterface("av_cameras")
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
