@@ -11,35 +11,6 @@ class AVSensorsInterface(Node):
     def __init__(self, node_name):
         super().__init__(node_name)
         
-        # Initialize the parameter with a default value (optional)
-        self.declare_parameter("cmd_line_parameter", "default_value")
-
-        # Retrieve the parameter
-        cmd_line_parameter_value = (
-            self.get_parameter("cmd_line_parameter").get_parameter_value().string_value
-        )
-
-        self.get_logger().info(
-            f"Received cmd_line_parameter: {cmd_line_parameter_value}"
-        )
-
-        # Declare parameters
-        # self.declare_parameter("camera_name", "windshield_camera")
-
-        # Alternatively, declare parameters with constraints and metadata
-        camera_name_descriptor = ParameterDescriptor(description="Name of the camera")
-        self.declare_parameter(
-            "camera_name", 
-            "windshield_camera", 
-            descriptor=camera_name_descriptor
-        )
-
-        # Get the parameter value
-        self._camera_name = self.get_parameter("camera_name").get_parameter_value().string_value
-        
-        # Callback for parameter changes
-        self.add_on_set_parameters_callback(self.parameters_callback)
-
         # Publishers for the sensors
         self._lidar_pub = self.create_publisher(LaserScan, "av_lidar", 10)
         self._camera_pub = self.create_publisher(Image, "av_camera", 10)
@@ -97,7 +68,7 @@ class AVSensorsInterface(Node):
         self._camera_msg.step = 640 * 3
         self._camera_msg.data = [0] * 640 * 480 * 3
         # Publish the message
-        self.get_logger().info("Publishing message from " + self._camera_name)
+        self.get_logger().info("Publishing message from camera")
         self._camera_pub.publish(self._camera_msg)
 
     def generate_random_radar_return(self):
@@ -142,12 +113,3 @@ class AVSensorsInterface(Node):
         # Publish the message
         # self.get_logger().info("Publishing radar message")
         self._radar_pub.publish(self._radar_msg)
-        
-    def parameters_callback(self, params):
-        success = False
-        for param in params:
-            if param.name == "camera_name":
-                if param.type_ == Parameter.Type.STRING:
-                    success = True
-                    self._camera_name = param.value  # modify the attribute
-        return SetParametersResult(successful=success)
