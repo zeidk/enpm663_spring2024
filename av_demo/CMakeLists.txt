@@ -13,13 +13,26 @@ find_package(rclpy REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(radar_msgs REQUIRED)
 
+
+
 install(DIRECTORY
+  include
   launch
   config
   DESTINATION share/${PROJECT_NAME}
 )
 
 # C++
+include_directories(include)
+
+# Camera
+add_executable(av_sensors_demo src/av_sensors_demo.cpp)
+ament_target_dependencies(av_sensors_demo rclcpp sensor_msgs radar_msgs)
+
+install(TARGETS
+av_sensors_demo
+DESTINATION lib/${PROJECT_NAME}
+)
 
 # Python
 ament_python_install_package(${PROJECT_NAME})
