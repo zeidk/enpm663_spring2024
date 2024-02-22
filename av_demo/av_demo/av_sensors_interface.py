@@ -10,9 +10,30 @@ from rcl_interfaces.msg import SetParametersResult
 class AVSensorsInterface(Node):
     def __init__(self, node_name):
         super().__init__(node_name)
-        
+
+        # Declare parameters
+        self.declare_parameter("cmd_line_parameter", "default_value")
+        self.get_logger().info(
+            f"cmd_line_parameter: {self.get_parameter('cmd_line_parameter').value}"
+        )
+
+        # self.declare_parameter("camera_name", "windshield_camera")
+
+        camera_descriptor = ParameterDescriptor(
+            description="Name of the camera sensor",
+        )
+        self.declare_parameter("camera_name", "windshield_camera", camera_descriptor)
+
+        # Get the parameters
+        self._camera_name = (
+            self.get_parameter("camera_name").get_parameter_value().string_value
+        )
+
+        # Parameter callback
+        self.add_on_set_parameters_callback(self.parameters_callback)
+
         # Publishers for the sensors
-        self._lidar_pub = self.create_publisher(LaserScan, "av_lidar", 10)
+        self._lidar_pub = self.create_publisher(LaserScan, "av_lidar_velodyne", 10)
         self._camera_pub = self.create_publisher(Image, "av_camera", 10)
         self._radar_pub = self.create_publisher(RadarScan, "av_radar", 10)
 
@@ -31,6 +52,18 @@ class AVSensorsInterface(Node):
         self._radar_timer = self.create_timer(1 / 20, self.radar_callback)
 
         self.get_logger().info(f"{node_name} initialized")
+
+    def parameters_callback(self, params):
+        """
+        Callback function for the parameters
+        """
+        success = False
+        for param in params:
+            if param.name == "camera_name":
+                if param.type_ == Parameter.Type.STRING:  # validation
+                    success = True
+                    self._camera_name = param.value  # modify the attribute
+        return SetParametersResult(successful=success)
 
     def lidar_callback(self):
         """
@@ -68,7 +101,7 @@ class AVSensorsInterface(Node):
         self._camera_msg.step = 640 * 3
         self._camera_msg.data = [0] * 640 * 480 * 3
         # Publish the message
-        self.get_logger().info("Publishing message from camera")
+        self.get_logger().info("Publishing message from " + self._camera_name)
         self._camera_pub.publish(self._camera_msg)
 
     def generate_random_radar_return(self):

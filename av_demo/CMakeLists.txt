@@ -14,7 +14,6 @@ find_package(sensor_msgs REQUIRED)
 find_package(radar_msgs REQUIRED)
 
 install(DIRECTORY
-  include
   launch
   config
   DESTINATION share/${PROJECT_NAME}
