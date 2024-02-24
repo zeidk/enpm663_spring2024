@@ -22,10 +22,12 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
+# ---------------------------------------------
 # C++
+# ---------------------------------------------
 include_directories(include)
 
-# Camera
+# Sensors
 add_executable(av_sensors_demo src/av_sensors_demo.cpp)
 ament_target_dependencies(av_sensors_demo rclcpp sensor_msgs radar_msgs)
 
@@ -34,7 +36,27 @@ av_sensors_demo
 DESTINATION lib/${PROJECT_NAME}
 )
 
+# Actions
+add_executable(av_actions_demo src/av_actions_demo.cpp)
+ament_target_dependencies(av_actions_demo rclcpp sensor_msgs radar_msgs)
+
+install(TARGETS
+av_actions_demo
+DESTINATION lib/${PROJECT_NAME}
+)
+
+# Sensors
+add_executable(av_cameras_demo src/av_cameras_demo.cpp)
+ament_target_dependencies(av_cameras_demo rclcpp sensor_msgs)
+
+install(TARGETS
+av_cameras_demo
+DESTINATION lib/${PROJECT_NAME}
+)
+
+# ---------------------------------------------
 # Python
+# ---------------------------------------------
 ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS

@@ -1,17 +1,13 @@
 # pull in some Python launch modules.
 from launch import LaunchDescription
 from launch_ros.actions import Node
-
-# import os
-# from ament_index_python.packages import get_package_share_directory
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
-
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 
 
-# this function is needed
+# This function is needed
 def generate_launch_description():
     ld = LaunchDescription()
 
@@ -27,11 +23,12 @@ def generate_launch_description():
         [FindPackageShare("av_demo"), "config", "params.yaml"]
     )
 
-    av_actions = Node(
+    # Python nodes
+    av_actions_py = Node(
         package="av_demo",
         executable="av_actions_demo.py",
     )
-    av_sensors = Node(
+    av_sensors_py = Node(
         package="av_demo",
         executable="av_sensors_demo.py",
         parameters=[
@@ -39,10 +36,25 @@ def generate_launch_description():
             node_params,
         ],
     )
+    
+    # C++ nodes
+    av_actions_cpp = Node(
+        package="av_demo",
+        executable="av_actions_demo",
+    )
+    av_sensors_cpp = Node(
+        package="av_demo",
+        executable="av_sensors_demo",
+        parameters=[
+            {"cmd_line_parameter": LaunchConfiguration("cmd_line_parameter")},
+            node_params,
+        ],
+    )
 
     ld.add_action(cmd_line_parameter)
-    # ld.add_action(av_camera1)
-    # ld.add_action(av_camera2)
-    # ld.add_action(av_camera3)
-    ld.add_action(av_sensors)
+    # ld.add_action(av_sensors_py)
+    # ld.add_action(av_actions_py)
+    # ld.add_action(av_actions_cpp)
+    ld.add_action(av_sensors_cpp)
+
     return ld

@@ -19,7 +19,6 @@ using camera_msg = sensor_msgs::msg::Image;
 using lidar_msg = sensor_msgs::msg::LaserScan;
 using radar_msg = radar_msgs::msg::RadarScan;
 
-// timer
 class AVSensorsInterface : public rclcpp::Node {
  public:
   AVSensorsInterface(std::string node_name) : Node(node_name) {
@@ -28,32 +27,53 @@ class AVSensorsInterface : public rclcpp::Node {
     lidar_msg_ = sensor_msgs::msg::LaserScan();
     radar_msg_ = radar_msgs::msg::RadarScan();
 
-    // publisher
+    //----------------------------------------------
+    // publishers
+    //----------------------------------------------
     camera_publisher_ = this->create_publisher<camera_msg>("av_camera", 10);
     lidar_publisher_ = this->create_publisher<lidar_msg>("av_lidar", 10);
     radar_publisher_ = this->create_publisher<radar_msg>("av_radar", 10);
 
+    //----------------------------------------------
     // parameters
-    // this->declare_parameter("frequency", 1.0);
-    // this->declare_parameter("bandwidth", 2.5);
-    // this->declare_parameter("name", "camera");
-    // camera_frequency_ = this->get_parameter("frequency").as_double();
-    // camera_bandwidth_ = this->get_parameter("bandwidth").as_double();
-    // camera_name_ = this->get_parameter("name").as_string();
+    //----------------------------------------------
 
-    // publisher timers
-    camera_timer_ = this->create_wall_timer(
-        std::chrono::milliseconds((int)((1 / 10) * 1000)),
-        std::bind(&AVSensorsInterface::camera_timer_callback, this));
+    // Command line arguments
+    this->declare_parameter("cmd_line_parameter", "default_value");
+    RCLCPP_INFO_STREAM(
+        this->get_logger(),
+        "cmd_line_parameter: "
+            << this->get_parameter("cmd_line_parameter").as_string());
+
+    // Declare parameters
+    // this->declare_parameter("camera_name", "windshield_camera");
+    // Declare a parameter with a descriptor
+    rcl_interfaces::msg::ParameterDescriptor descriptor;
+    descriptor.description = "Name of the sensors";
+    descriptor.type = rcl_interfaces::msg::ParameterType::PARAMETER_STRING;
+    auto parameter =
+        this->declare_parameter("camera_name", "windshield_camera", descriptor);
+
+    // Get the parameter value and store it in a member variable
+    camera_name_ = this->get_parameter("camera_name").as_string();
+
+    //----------------------------------------------
+    // timers
+    //----------------------------------------------
     lidar_timer_ = this->create_wall_timer(
         std::chrono::milliseconds((int)((1 / 10) * 1000)),
         std::bind(&AVSensorsInterface::lidar_timer_callback, this));
+    camera_timer_ = this->create_wall_timer(
+        std::chrono::milliseconds((int)((1 / 15) * 1000)),
+        std::bind(&AVSensorsInterface::camera_timer_callback, this));
     radar_timer_ = this->create_wall_timer(
-        std::chrono::milliseconds((int)((1 / 10) * 1000)),
+        std::chrono::milliseconds((int)((1 / 20) * 1000)),
         std::bind(&AVSensorsInterface::radar_timer_callback, this));
   }
 
  private:
+  // attributes for parameters
+  std::string camera_name_;  //!< Name of the camera
   // message objects
   camera_msg camera_msg_;  //!< Message object for camera
   lidar_msg lidar_msg_;    //!< Message object for lidar
@@ -77,14 +97,14 @@ class AVSensorsInterface : public rclcpp::Node {
    *
    */
   void camera_timer_callback();
-    /**
-     * @brief  Timer callback for lidar
-     *
-     */
+  /**
+   * @brief  Timer callback for lidar
+   *
+   */
   void lidar_timer_callback();
-    /**
-     * @brief  Timer callback for radar
-     *
-     */
+  /**
+   * @brief  Timer callback for radar
+   *
+   */
   void radar_timer_callback();
 };
