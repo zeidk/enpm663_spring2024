@@ -6,7 +6,6 @@ from rcl_interfaces.msg import ParameterDescriptor
 from rclpy.parameter import Parameter
 from rcl_interfaces.msg import SetParametersResult
 
-
 class AVSensorsInterface(Node):
     def __init__(self, node_name):
         super().__init__(node_name)
@@ -17,23 +16,40 @@ class AVSensorsInterface(Node):
             f"cmd_line_parameter: {self.get_parameter('cmd_line_parameter').value}"
         )
 
-        # self.declare_parameter("camera_name", "windshield_camera")
+        
+        self.declare_parameter("camera_name", "windshield_camera")
+        self.declare_parameter("lidar_name", "rooftop_lidar")
+        self.declare_parameter("radar_name", "front_radar")
 
-        camera_descriptor = ParameterDescriptor(
-            description="Name of the camera sensor",
-        )
-        self.declare_parameter("camera_name", "windshield_camera", camera_descriptor)
+        # camera_descriptor = ParameterDescriptor(
+        #     description="Name of the camera sensor",
+            
+        # )
+        # self.declare_parameter("camera_name", "windshield_camera", camera_descriptor)
 
         # Get the parameters
+        
+        # camera
         self._camera_name = (
             self.get_parameter("camera_name").get_parameter_value().string_value
         )
+        self.get_logger().error(f"camera_name: {self._camera_name}")
+        # lidar
+        self._lidar_name = (
+            self.get_parameter("lidar_name").get_parameter_value().string_value
+        )
+        self.get_logger().error(f"lidar_name: {self._lidar_name}")
+        # radar
+        self._radar_name = (
+            self.get_parameter("radar_name").get_parameter_value().string_value
+        )
+        self.get_logger().error(f"radar_name: {self._radar_name}")
 
         # Parameter callback
         self.add_on_set_parameters_callback(self.parameters_callback)
 
         # Publishers for the sensors
-        self._lidar_pub = self.create_publisher(LaserScan, "av_lidar_velodyne", 10)
+        self._lidar_pub = self.create_publisher(LaserScan, "av_lidar", 10)
         self._camera_pub = self.create_publisher(Image, "av_camera", 10)
         self._radar_pub = self.create_publisher(RadarScan, "av_radar", 10)
 
@@ -44,12 +60,12 @@ class AVSensorsInterface(Node):
 
         # Timers for the sensors
 
-        # Timer for the lidar running at 10 Hz
-        self._lidar_timer = self.create_timer(1 / 10, self.lidar_callback)
-        # Timer for the camera running at 15 Hz
-        self._camera_timer = self.create_timer(1 / 15, self.camera_callback)
-        # Timer for the radar running at 20 Hz
-        self._radar_timer = self.create_timer(1 / 20, self.radar_callback)
+        # Timer for the lidar
+        self._lidar_timer = self.create_timer(2, self.lidar_callback)
+        # Timer for the camera
+        self._camera_timer = self.create_timer(2, self.camera_callback)
+        # Timer for the radar
+        self._radar_timer = self.create_timer(2, self.radar_callback)
 
         self.get_logger().info(f"{node_name} initialized")
 
@@ -63,6 +79,10 @@ class AVSensorsInterface(Node):
                 if param.type_ == Parameter.Type.STRING:  # validation
                     success = True
                     self._camera_name = param.value  # modify the attribute
+            # elif param.name == "camera_frequency":
+            #     if param.type_ == Parameter.Type.DOUBLE:
+            #         self._camera_timer.timer_period = param.value
+            #         self._camera_timer.reset()
         return SetParametersResult(successful=success)
 
     def lidar_callback(self):

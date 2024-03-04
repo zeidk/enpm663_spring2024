@@ -1,3 +1,16 @@
-av_sensors:  # Name of your Node
+av1:  # Name of your Node
   ros__parameters:
-    camera_name: 'front_camera'
+    camera_name: 'av1_camera'
+    lidar_name: 'av1_lidar'
+    radar_name: 'av1_radar'
+av2:  # Name of your Node
+  ros__parameters:
+    camera_name: 'av2_camera'
+    lidar_name: 'av2_lidar'
+    radar_name: 'av2_radar'
+av3:  # Name of your Node
+  ros__parameters:
+    camera_name: 'av3_camera'
+    lidar_name: 'av3_lidar'
+    radar_name: 'av3_radar'
+  
