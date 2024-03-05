@@ -16,6 +16,29 @@ find_package(rclpy REQUIRED)
 #   config
 #   DESTINATION share/${PROJECT_NAME}
 # )
+# ---------------------------------------------
+# C++
+# ---------------------------------------------
+include_directories(include)
+
+#----------------------------------------------
+# Singlethreaded Executor Example
+add_executable(singlethreaded_executor_exe src/singlethreaded_executor.cpp)
+ament_target_dependencies(singlethreaded_executor_exe rclcpp)
+
+install(TARGETS
+singlethreaded_executor_exe
+DESTINATION lib/${PROJECT_NAME}
+)
+#----------------------------------------------
+# Multithreaded Executor with 2 Mutually Exclusive Callback Groups
+add_executable(dual_mutually_exclusive_exe src/dual_mutually_exclusive.cpp)
+ament_target_dependencies(dual_mutually_exclusive_exe rclcpp)
+
+install(TARGETS
+dual_mutually_exclusive_exe
+DESTINATION lib/${PROJECT_NAME}
+)
 
 # ---------------------------------------------
 # Python
