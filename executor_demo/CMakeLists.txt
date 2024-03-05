@@ -11,11 +11,11 @@ find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-install(DIRECTORY
-  launch
-  config
-  DESTINATION share/${PROJECT_NAME}
-)
+# install(DIRECTORY
+#   launch
+#   config
+#   DESTINATION share/${PROJECT_NAME}
+# )
 
 # ---------------------------------------------
 # Python
