@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
-from executor_demo.executor_interface import ExecutorInterface
+from executor_demo.executor_demo_interface import SingleThreadedExecutorInterface
 
 
 def main(args=None):
@@ -12,7 +12,7 @@ def main(args=None):
         args (list, optional): Command-line arguments passed to the node. Defaults to None.
     """
     rclpy.init(args=args)
-    node = ExecutorInterface("executor_demo")
+    node = SingleThreadedExecutorInterface("single_threaded_executor_demo")
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
