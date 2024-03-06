@@ -12,19 +12,19 @@ class SingleThreadedExecutorInterface : public rclcpp::Node {
   SingleThreadedExecutorInterface(std::string node_name) : Node(node_name) {
     // Timer1
     timer1_ = this->create_wall_timer(std::chrono::seconds(1), [this]() {
-      RCLCPP_INFO(this->get_logger(), "Timer1 callback");
+      RCLCPP_INFO(this->get_logger(), "\033[1;33m Timer1 callback\033[0m");
     });
-    // Timer1
+    // Timer2
     timer2_ = this->create_wall_timer(std::chrono::seconds(1), [this]() {
-      RCLCPP_INFO(this->get_logger(), "Timer2 callback");
+      RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
     });
-    // Timer1
+    // Timer3
     timer3_ = this->create_wall_timer(std::chrono::seconds(2), [this]() {
-      RCLCPP_INFO(this->get_logger(), "Timer3 callback");
+      RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
     });
-    // Timer1
+    // Timer4
     timer4_ = this->create_wall_timer(std::chrono::seconds(2), [this]() {
-      RCLCPP_INFO(this->get_logger(), "Timer4 callback");
+      RCLCPP_INFO(this->get_logger(), "\033[1;31m Timer4 callback\033[0m");
     });
   }
 
@@ -92,10 +92,120 @@ class DualMutuallyExclusiveInterface : public rclcpp::Node {
   rclcpp::TimerBase::SharedPtr timer4_;
 
   // callback functions
-  void timer1_callback() { RCLCPP_INFO(this->get_logger(), "Timer1 callback"); }
-  void timer2_callback() { RCLCPP_INFO(this->get_logger(), "Timer2 callback"); }
-  void timer3_callback() { RCLCPP_INFO(this->get_logger(), "Timer3 callback"); }
-  void timer4_callback() { RCLCPP_INFO(this->get_logger(), "Timer4 callback"); }
+  void timer1_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;33m Timer1 callback\033[0m");
+  }
+  void timer2_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
+  }
+  void timer3_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
+  }
+  void timer4_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;31m Timer4 callback\033[0m");
+  }
 };
 
-// DualMutuallyExclusiveInterface ExclusiveReentrantInterface ReentrantInterface
+class ExclusiveReentrantInterface : public rclcpp::Node {
+ public:
+  ExclusiveReentrantInterface(std::string node_name) : Node(node_name) {
+    // Create a mutually exclusive callback group
+    group1_ = this->create_callback_group(
+        rclcpp::CallbackGroupType::MutuallyExclusive);
+    // Create a reentrant callback group
+    group2_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+    // Timer1
+    timer1_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ExclusiveReentrantInterface::timer1_callback, this),
+        group1_);
+    // Timer2
+    timer2_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ExclusiveReentrantInterface::timer2_callback, this),
+        group1_);
+    // Timer3
+    timer3_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ExclusiveReentrantInterface::timer3_callback, this),
+        group2_);
+    // Timer4
+    timer4_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ExclusiveReentrantInterface::timer4_callback, this),
+        group2_);
+  }
+
+ private:
+  // callback groups
+  rclcpp::CallbackGroup::SharedPtr group1_;
+  rclcpp::CallbackGroup::SharedPtr group2_;
+  // timer objects
+  rclcpp::TimerBase::SharedPtr timer1_;
+  rclcpp::TimerBase::SharedPtr timer2_;
+  rclcpp::TimerBase::SharedPtr timer3_;
+  rclcpp::TimerBase::SharedPtr timer4_;
+
+  // callback functions
+  void timer1_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;33m Timer1 callback\033[0m");
+  }
+  void timer2_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
+  }
+  void timer3_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
+  }
+  void timer4_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;31m Timer4 callback\033[0m");
+  }
+};
+
+class ReentrantInterface : public rclcpp::Node {
+ public:
+  ReentrantInterface(std::string node_name) : Node(node_name) {
+    // Create a reentrant callback group
+    group_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+    // Timer1
+    timer1_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ReentrantInterface::timer1_callback, this), group_);
+    // Timer2
+    timer2_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ReentrantInterface::timer2_callback, this), group_);
+    // Timer3
+    timer3_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ReentrantInterface::timer3_callback, this), group_);
+    // Timer4
+    timer4_ = this->create_wall_timer(
+        std::chrono::seconds(1),
+        std::bind(&ReentrantInterface::timer4_callback, this), group_);
+  }
+
+ private:
+  // callback groups
+  rclcpp::CallbackGroup::SharedPtr group_;
+  // timer objects
+  rclcpp::TimerBase::SharedPtr timer1_;
+  rclcpp::TimerBase::SharedPtr timer2_;
+  rclcpp::TimerBase::SharedPtr timer3_;
+  rclcpp::TimerBase::SharedPtr timer4_;
+
+  // callback functions
+  void timer1_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;33m Timer1 callback\033[0m");
+  }
+  void timer2_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
+  }
+  void timer3_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
+  }
+  void timer4_callback() {
+    RCLCPP_INFO(this->get_logger(), "\033[1;31m Timer4 callback\033[0m");
+  }
+};

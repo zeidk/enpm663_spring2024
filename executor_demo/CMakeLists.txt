@@ -11,11 +11,6 @@ find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-# install(DIRECTORY
-#   launch
-#   config
-#   DESTINATION share/${PROJECT_NAME}
-# )
 # ---------------------------------------------
 # C++
 # ---------------------------------------------
@@ -39,7 +34,24 @@ install(TARGETS
 dual_mutually_exclusive_exe
 DESTINATION lib/${PROJECT_NAME}
 )
+#----------------------------------------------
+# Multithreaded Executor with 1 Mutually Exclusive and 1 Reentrant Group
+add_executable(exclusive_reentrant_exe src/exclusive_reentrant.cpp)
+ament_target_dependencies(exclusive_reentrant_exe rclcpp)
 
+install(TARGETS
+exclusive_reentrant_exe
+DESTINATION lib/${PROJECT_NAME}
+)
+#----------------------------------------------
+# Multithreaded Executor with 1 Reentrant Group
+add_executable(reentrant_exe src/reentrant.cpp)
+ament_target_dependencies(reentrant_exe rclcpp)
+
+install(TARGETS
+reentrant_exe
+DESTINATION lib/${PROJECT_NAME}
+)
 # ---------------------------------------------
 # Python
 # ---------------------------------------------

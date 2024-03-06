@@ -1,0 +1,11 @@
+# Constants
+uint8 SLOW=0 # Speed < 30 mph
+uint8 NORMAL=1 # 30 mph <= Speed < 60 mph
+uint8 FAST=2 # Speed >= 60 mph
+
+
+# Request
+float64 speed # Speed of the vehicle
+---
+# Response
+uint8 status # SLOW, NORMAL, FAST
