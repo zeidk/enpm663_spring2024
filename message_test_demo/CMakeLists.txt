@@ -35,6 +35,15 @@ install(TARGETS
 service_server_exe
 DESTINATION lib/${PROJECT_NAME}
 )
+#----------------------------------------------
+# Node for the service client
+add_executable(service_client_exe src/service_client_demo.cpp)
+ament_target_dependencies(service_client_exe rclcpp interface_demo_msgs)
+
+install(TARGETS
+service_client_exe
+DESTINATION lib/${PROJECT_NAME}
+)
 
 # ---------------------------------------------
 # Python

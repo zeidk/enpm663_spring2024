@@ -17,7 +17,7 @@ set(msg_files
 )
 
 set(srv_files
-  "srv/GetVehicleStatus.srv"
+  "srv/GetSpeedProfile.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

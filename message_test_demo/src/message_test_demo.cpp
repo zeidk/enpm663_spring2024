@@ -1,14 +1,20 @@
 #include <rclcpp/rclcpp.hpp>
-
+#include <random>
 #include "message_test_demo/message_test_demo_interface.hpp"
 
 void MessageTestDemoInterface::timer_callback() {
-// generate a random float number between 20 and 80
-  float random_speed = 20 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (80 - 20)));
+  // generate a random float number between 20 and 80
+  // Set up random number generation
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(20.0, 80.0);
+
+    // Generate random double between 20 and 80
+    double random_double = dis(gen);
 
   // update the message
   msg_.name = "vehicle";
-  msg_.speed = random_speed;
+  msg_.speed = random_double;
   msg_.pose.x = 1.0;
   msg_.pose.y = 2.0;
   msg_.pose.theta = 3.0;
