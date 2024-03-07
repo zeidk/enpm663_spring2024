@@ -14,9 +14,9 @@ class SingleThreadedExecutorInterface(Node):
         # Timer2
         self._timer2 = self.create_timer(1, self.timer2_callback)
         # Timer3
-        self._timer3 = self.create_timer(2, self.timer3_callback)
+        self._timer3 = self.create_timer(1, self.timer3_callback)
         # Timer4
-        self._timer4 = self.create_timer(2, self.timer4_callback)
+        self._timer4 = self.create_timer(1, self.timer4_callback)
 
         self.get_logger().info(f"{node_name} initialized")
 
@@ -31,6 +31,8 @@ class SingleThreadedExecutorInterface(Node):
         Callback function for timer2
         """
         self.get_logger().info("🟦Timer2 callback")
+        # while True:
+        #     pass
 
     def timer3_callback(self):
         """
@@ -60,9 +62,9 @@ class DualMutuallyExclusiveInterface(Node):
         # Timer2
         self._timer2 = self.create_timer(1, self.timer2_callback, callback_group=group1)
         # Timer3
-        self._timer3 = self.create_timer(2, self.timer3_callback, callback_group=group2)
+        self._timer3 = self.create_timer(1, self.timer3_callback, callback_group=group2)
         # Timer4
-        self._timer4 = self.create_timer(2, self.timer4_callback, callback_group=group2)
+        self._timer4 = self.create_timer(1, self.timer4_callback, callback_group=group2)
 
         self.get_logger().info(f"{node_name} initialized")
 
@@ -77,6 +79,8 @@ class DualMutuallyExclusiveInterface(Node):
         Callback function for timer2
         """
         self.get_logger().info("🟦Timer2 callback")
+        while True:
+            pass
 
     def timer3_callback(self):
         """
@@ -106,9 +110,9 @@ class ExclusiveReentrantInterface(Node):
         # Timer2
         self._timer2 = self.create_timer(1, self.timer2_callback, callback_group=group1)
         # Timer3
-        self._timer3 = self.create_timer(2, self.timer3_callback, callback_group=group2)
+        self._timer3 = self.create_timer(1, self.timer3_callback, callback_group=group2)
         # Timer4
-        self._timer4 = self.create_timer(2, self.timer4_callback, callback_group=group2)
+        self._timer4 = self.create_timer(1, self.timer4_callback, callback_group=group2)
 
         self.get_logger().info(f"{node_name} initialized")
 
@@ -151,9 +155,9 @@ class ReentrantInterface(Node):
         # Timer2
         self._timer2 = self.create_timer(1, self.timer2_callback, callback_group=group)
         # Timer3
-        self._timer3 = self.create_timer(2, self.timer3_callback, callback_group=group)
+        self._timer3 = self.create_timer(1, self.timer3_callback, callback_group=group)
         # Timer4
-        self._timer4 = self.create_timer(2, self.timer4_callback, callback_group=group)
+        self._timer4 = self.create_timer(1, self.timer4_callback, callback_group=group)
 
         self.get_logger().info(f"{node_name} initialized")
 
