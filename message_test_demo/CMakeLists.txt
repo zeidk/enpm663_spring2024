@@ -52,6 +52,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   script/message_test_exe.py
+  script/service_client_timer_demo.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
