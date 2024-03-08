@@ -71,8 +71,8 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   script/message_test_exe.py
-  script/service_client_timer_demo.py
-  script/service_client_subscriber_demo.py
+  script/service_client_timer_exe.py
+  script/service_client_subscriber_exe.py
   script/service_server_exe.py
   DESTINATION lib/${PROJECT_NAME}
 )

@@ -1,5 +1,3 @@
 *.zip
 .vscode/
 .mypy_cache/
-launch/
-config/
