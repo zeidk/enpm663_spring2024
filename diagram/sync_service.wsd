@@ -1,0 +1,16 @@
+@startuml
+skinparam sequenceMessageAlign right
+skinparam style strictuml
+participant Client #99FF99
+participant Server #orange
+' activate Client
+Client -> Server : send synchronous request
+hnote over Client : blocked until response
+activate Server
+Server -> "User defined method" : handle request
+activate "User defined method"
+"User defined method" -> Server: set response
+deactivate "User defined method"
+Server -> Client : send response
+deactivate Server
+@enduml

@@ -25,5 +25,6 @@ class VehicleSpeedStatusInterface : public rclcpp::Node {
       const std::shared_ptr<GetSpeedProfileSrv::Request> request,
       std::shared_ptr<GetSpeedProfileSrv::Response> response);
 
+  // Service object
   rclcpp::Service<GetSpeedProfileSrv>::SharedPtr service_;
 };
