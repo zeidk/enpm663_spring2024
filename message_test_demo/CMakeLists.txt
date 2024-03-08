@@ -37,12 +37,24 @@ DESTINATION lib/${PROJECT_NAME}
 )
 
 #----------------------------------------------
-# Demo showing how to send synchronous and asynchronous service requests from a subscriber
+# Demo showing how to send synchronous and asynchronous service requests 
+# from a subscriber callback
 add_executable(service_client_subscriber_exe src/service_client_subscriber_demo.cpp)
 ament_target_dependencies(service_client_subscriber_exe rclcpp interface_demo_msgs)
 
 install(TARGETS
 service_client_subscriber_exe
+DESTINATION lib/${PROJECT_NAME}
+)
+
+#----------------------------------------------
+# Demo showing how to send synchronous and asynchronous service requests 
+# from a timer callback
+add_executable(service_client_timer_exe src/service_client_timer_demo.cpp)
+ament_target_dependencies(service_client_timer_exe rclcpp interface_demo_msgs)
+
+install(TARGETS
+service_client_timer_exe
 DESTINATION lib/${PROJECT_NAME}
 )
 
