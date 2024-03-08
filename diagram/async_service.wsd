@@ -1,0 +1,23 @@
+@startuml
+skinparam sequenceMessageAlign right
+skinparam style strictuml
+participant Client #99FF99
+participant Server #orange
+participant "Client Callback" #87CEEB
+
+Client -> Server : send asynchronous request
+' activate Client
+hnote over Client : active
+activate Server
+Server -> "User defined method" : handle request
+activate "User defined method"
+"User defined method" -> Server: set response
+deactivate "User defined method"
+
+Server -> "Client Callback": send response
+activate "Client Callback"
+"Client Callback" -> Client : send response
+deactivate "Client Callback"
+deactivate Server
+@enduml
+

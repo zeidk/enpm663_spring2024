@@ -6,7 +6,7 @@
 // aliases
 using GetSpeedProfileSrv = interface_demo_msgs::srv::GetSpeedProfile;
 
-void VehicleSpeedStatusInterface::handle_vehicle_speed_status(
+void VehicleSpeedStatusInterface::handle_request(
     const std::shared_ptr<GetSpeedProfileSrv::Request> request,
     std::shared_ptr<GetSpeedProfileSrv::Response> response) {
   auto speed = request->speed;
