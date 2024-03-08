@@ -48,7 +48,7 @@ private:
     // send request to the server from a timer
     void send_request_from_timer();
     // send request to the server from a subscriber callback
-    void send_request_from_subscriber(double speed);
+    // void send_request_from_subscriber(double speed);
 
     // timer callback function to send requests to the server at regular intervals
     void timer_callback();

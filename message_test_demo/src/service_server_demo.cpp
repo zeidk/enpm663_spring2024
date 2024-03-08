@@ -4,19 +4,20 @@
 #include <interface_demo_msgs/srv/get_speed_profile.hpp>
 
 // aliases
-using GET_SPEED_PROFILE = interface_demo_msgs::srv::GetSpeedProfile;
+using GetSpeedProfileSrv = interface_demo_msgs::srv::GetSpeedProfile;
 
 void VehicleSpeedStatusInterface::handle_vehicle_speed_status(
-    const std::shared_ptr<GET_SPEED_PROFILE::Request> request,
-    std::shared_ptr<GET_SPEED_PROFILE::Response> response) {
+    const std::shared_ptr<GetSpeedProfileSrv::Request> request,
+    std::shared_ptr<GetSpeedProfileSrv::Response> response) {
   auto speed = request->speed;
 
   if (speed < 30) {
-    response->status = GET_SPEED_PROFILE::Request::SLOW;
+    response->status = interface_demo_msgs::srv::GetSpeedProfile::Request::SLOW;
   } else if (speed >= 30 && speed < 60) {
-    response->status = GET_SPEED_PROFILE::Request::NORMAL;
+    response->status =
+        interface_demo_msgs::srv::GetSpeedProfile::Request::NORMAL;
   } else if (speed >= 60) {
-    response->status = GET_SPEED_PROFILE::Request::FAST;
+    response->status = interface_demo_msgs::srv::GetSpeedProfile::Request::FAST;
   }
 
   RCLCPP_INFO_STREAM(

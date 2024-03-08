@@ -35,16 +35,23 @@ install(TARGETS
 service_server_exe
 DESTINATION lib/${PROJECT_NAME}
 )
+
 #----------------------------------------------
-# Node for the service client
-add_executable(service_client_exe src/service_client_demo.cpp)
-ament_target_dependencies(service_client_exe rclcpp interface_demo_msgs)
+# Demo showing how to send synchronous and asynchronous service requests from a subscriber
+add_executable(service_client_subscriber_exe src/service_client_subscriber_demo.cpp)
+ament_target_dependencies(service_client_subscriber_exe rclcpp interface_demo_msgs)
 
 install(TARGETS
-service_client_exe
+service_client_subscriber_exe
 DESTINATION lib/${PROJECT_NAME}
 )
 
+#----------------------------------------------
+# Install the launch files
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 # ---------------------------------------------
 # Python
 # ---------------------------------------------
@@ -53,6 +60,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   script/message_test_exe.py
   script/service_client_timer_demo.py
+  script/service_client_subscriber_demo.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

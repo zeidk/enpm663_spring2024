@@ -7,13 +7,13 @@
 #include <rclcpp/rclcpp.hpp>
 
 
-using GET_SPEED_PROFILE = interface_demo_msgs::srv::GetSpeedProfile;
+using GetSpeedProfileSrv = interface_demo_msgs::srv::GetSpeedProfile;
 
 
 class VehicleSpeedStatusInterface : public rclcpp::Node {
  public:
   VehicleSpeedStatusInterface(std::string node_name) : Node(node_name) {
-    service_ = this->create_service<GET_SPEED_PROFILE>(
+    service_ = this->create_service<GetSpeedProfileSrv>(
         "get_speed_profile",
         std::bind(&VehicleSpeedStatusInterface::handle_vehicle_speed_status,
                   this, std::placeholders::_1, std::placeholders::_2));
@@ -22,8 +22,8 @@ class VehicleSpeedStatusInterface : public rclcpp::Node {
 
  private:
   void handle_vehicle_speed_status(
-      const std::shared_ptr<GET_SPEED_PROFILE::Request> request,
-      std::shared_ptr<GET_SPEED_PROFILE::Response> response);
+      const std::shared_ptr<GetSpeedProfileSrv::Request> request,
+      std::shared_ptr<GetSpeedProfileSrv::Response> response);
 
-  rclcpp::Service<GET_SPEED_PROFILE>::SharedPtr service_;
+  rclcpp::Service<GetSpeedProfileSrv>::SharedPtr service_;
 };
