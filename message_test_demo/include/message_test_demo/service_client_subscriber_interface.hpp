@@ -38,7 +38,7 @@ class ServiceClientSubscriberInterface : public rclcpp::Node {
     // initialize the client object for synchronous communication
     sync_client_ = this->create_client<GetSpeedProfileSrv>(
         "get_speed_profile",               // service name
-        rmw_qos_profile_services_default,  // qos profile
+        rmw_qos_profile_services_default,                   // quality of service
         mutex_group_                       // callback group
     );
 

@@ -82,35 +82,18 @@ void ServiceClientTimerInterface::send_sync_request() {
   // this is a synchronous call
   auto result_future = sync_client_->async_send_request(request_);
 
-  // FIXME: Fix the following code snippet
-  // // Capture shared pointer to the node
-  // auto node = shared_from_this();
-  // // Wait for the response
-  // auto spin_result = rclcpp::spin_until_future_complete(node, result_future);
-  // // Check if the spin was successful
-  // if (spin_result == rclcpp::FutureReturnCode::SUCCESS) {
-  //   auto result = result_future.get();
-  //   // Process the response
-  //   // print_profile(result->status);
-  // } else {
-  //   RCLCPP_ERROR(node->get_logger(), "Failed to receive response.");
-  // }
-
-  auto future_status = result_future.wait_for(std::chrono::seconds(20));
-
-  // Process result
-  if (future_status == std::future_status::ready) {
-    if (result_future.get()->status) {
-      // RCLCPP_INFO_STREAM(this->get_logger(), "Srv suceeded");
-      print_profile(result_future.get()->status);
-    } else {
-      RCLCPP_ERROR_STREAM(this->get_logger(), "Failed to receive response.");
+  try
+{
+    auto response = result_future.get();
+    if (response->status)
+    {
+        print_profile(response->status);
     }
-  } else if (future_status == std::future_status::timeout) {
-    RCLCPP_WARN_STREAM(this->get_logger(), "The timeout period has elapsed");
-  } else if (future_status == std::future_status::deferred) {
-    RCLCPP_INFO_STREAM(this->get_logger(), "The request is still pending");
-  }
+}
+catch (const std::exception &e)
+{
+    RCLCPP_ERROR(this->get_logger(), "Service call failed.");
+}
 }
 
 //----------------------------------------------------------------
