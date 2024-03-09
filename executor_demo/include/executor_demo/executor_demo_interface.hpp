@@ -19,11 +19,11 @@ class SingleThreadedExecutorInterface : public rclcpp::Node {
       RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
     });
     // Timer3
-    timer3_ = this->create_wall_timer(std::chrono::seconds(2), [this]() {
+    timer3_ = this->create_wall_timer(std::chrono::seconds(1), [this]() {
       RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
     });
     // Timer4
-    timer4_ = this->create_wall_timer(std::chrono::seconds(2), [this]() {
+    timer4_ = this->create_wall_timer(std::chrono::seconds(1), [this]() {
       RCLCPP_INFO(this->get_logger(), "\033[1;31m Timer4 callback\033[0m");
     });
   }
@@ -54,14 +54,14 @@ class DualMutuallyExclusiveInterface : public rclcpp::Node {
   DualMutuallyExclusiveInterface(std::string node_name) : Node(node_name) {
     // Create a mutually exclusive callback group
     group1_ = this->create_callback_group(
-        rclcpp::CallbackGroupType::MutuallyExclusive, true);
+        rclcpp::CallbackGroupType::MutuallyExclusive);
     // Create a mutually exclusive callback group
     group2_ = this->create_callback_group(
-        rclcpp::CallbackGroupType::MutuallyExclusive, true);
+        rclcpp::CallbackGroupType::MutuallyExclusive);
 
     // Timer1
     timer1_ = this->create_wall_timer(
-        std::chrono::seconds(2),
+        std::chrono::seconds(1),
         std::bind(&DualMutuallyExclusiveInterface::timer1_callback, this),
         group1_);
     // Timer2
@@ -93,12 +93,18 @@ class DualMutuallyExclusiveInterface : public rclcpp::Node {
 
   // callback functions
   void timer1_callback() {
+    // while (1) {
+    //   // Do nothing
+    // }
     RCLCPP_INFO(this->get_logger(), "\033[1;33m Timer1 callback\033[0m");
   }
   void timer2_callback() {
     RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
   }
   void timer3_callback() {
+    // while (1) {
+    //   // Do nothing
+    // }
     RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
   }
   void timer4_callback() {
@@ -149,12 +155,18 @@ class ExclusiveReentrantInterface : public rclcpp::Node {
 
   // callback functions
   void timer1_callback() {
+    // while (1) {
+    //   // Do nothing
+    // }
     RCLCPP_INFO(this->get_logger(), "\033[1;33m Timer1 callback\033[0m");
   }
   void timer2_callback() {
     RCLCPP_INFO(this->get_logger(), "\033[1;34m Timer2 callback\033[0m");
   }
   void timer3_callback() {
+    // while (1) {
+    //   // Do nothing
+    // }
     RCLCPP_INFO(this->get_logger(), "\033[1;32m Timer3 callback\033[0m");
   }
   void timer4_callback() {

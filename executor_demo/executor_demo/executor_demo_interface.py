@@ -1,6 +1,13 @@
 from rclpy.node import Node
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 
+class Color:
+    RED = "\033[1;31m"
+    GREEN = "\033[1;32m"
+    YELLOW = "\033[1;33m"
+    BLUE = "\033[1;34m"
+    RESET = "\033[0m"
+
 
 class SingleThreadedExecutorInterface(Node):
     """
@@ -24,27 +31,25 @@ class SingleThreadedExecutorInterface(Node):
         """
         Callback function for timer1
         """
-        self.get_logger().info("⭐Timer1 callback")
+        self.get_logger().info(Color.YELLOW + "Timer1 callback" + Color.RESET)
 
     def timer2_callback(self):
         """
         Callback function for timer2
         """
-        self.get_logger().info("🟦Timer2 callback")
-        # while True:
-        #     pass
+        self.get_logger().info(Color.BLUE + "Timer2 callback" + Color.RESET)
 
     def timer3_callback(self):
         """
         Callback function for timer3
         """
-        self.get_logger().info("🔶Timer3 callback")
+        self.get_logger().info(Color.GREEN + "Timer3 callback" + Color.RESET)
 
     def timer4_callback(self):
         """
         Callback function for timer4
         """
-        self.get_logger().info("🔴Timer4 callback")
+        self.get_logger().info(Color.RED + "Timer4 callback" + Color.RESET)
 
 
 class DualMutuallyExclusiveInterface(Node):
@@ -72,27 +77,27 @@ class DualMutuallyExclusiveInterface(Node):
         """
         Callback function for timer1
         """
-        self.get_logger().info("⭐Timer1 callback")
+        self.get_logger().info(Color.YELLOW + "Timer1 callback" + Color.RESET)
 
     def timer2_callback(self):
         """
         Callback function for timer2
         """
-        self.get_logger().info("🟦Timer2 callback")
-        while True:
-            pass
+        self.get_logger().info(Color.BLUE + "Timer2 callback" + Color.RESET)
+        # while True:
+        #     pass
 
     def timer3_callback(self):
         """
         Callback function for timer3
         """
-        self.get_logger().info("🔶Timer3 callback")
+        self.get_logger().info(Color.GREEN + "Timer3 callback" + Color.RESET)
 
     def timer4_callback(self):
         """
         Callback function for timer4
         """
-        self.get_logger().info("🔴Timer4 callback")
+        self.get_logger().info(Color.RED + "Timer4 callback" + Color.RESET)
 
 
 class ExclusiveReentrantInterface(Node):
@@ -120,26 +125,28 @@ class ExclusiveReentrantInterface(Node):
         """
         Callback function for timer1
         """
-        self.get_logger().info("⭐Timer1 callback")
+        self.get_logger().info(Color.YELLOW + "Timer1 callback" + Color.RESET)
 
     def timer2_callback(self):
         """
         Callback function for timer2
         """
-        self.get_logger().info("🟦Timer2 callback")
+        self.get_logger().info(Color.BLUE + "Timer2 callback" + Color.RESET)
+        # while True:
+        #     pass
 
     def timer3_callback(self):
         """
         Callback function for timer3
         """
-        self.get_logger().info("🔶Timer3 callback")
+        self.get_logger().info(Color.GREEN + "Timer3 callback" + Color.RESET)
 
     def timer4_callback(self):
         """
         Callback function for timer4
         """
-        self.get_logger().info("🔴Timer4 callback")
-        
+        self.get_logger().info(Color.RED + "Timer4 callback" + Color.RESET)
+
 
 class ReentrantInterface(Node):
     """
@@ -165,22 +172,24 @@ class ReentrantInterface(Node):
         """
         Callback function for timer1
         """
-        self.get_logger().info("⭐Timer1 callback")
+        self.get_logger().info(Color.YELLOW + "Timer1 callback" + Color.RESET)
 
     def timer2_callback(self):
         """
         Callback function for timer2
         """
-        self.get_logger().info("🟦Timer2 callback")
+        self.get_logger().info(Color.BLUE + "Timer2 callback" + Color.RESET)
+        # while True:
+        #     pass
 
     def timer3_callback(self):
         """
         Callback function for timer3
         """
-        self.get_logger().info("🔶Timer3 callback")
+        self.get_logger().info(Color.GREEN + "Timer3 callback" + Color.RESET)
 
     def timer4_callback(self):
         """
         Callback function for timer4
         """
-        self.get_logger().info("🔴Timer4 callback")
+        self.get_logger().info(Color.RED + "Timer4 callback" + Color.RESET)
