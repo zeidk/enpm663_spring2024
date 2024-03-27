@@ -53,6 +53,7 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
 install(PROGRAMS
   script/frame_broadcaster_demo.py
+  script/frame_kdl_demo.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
