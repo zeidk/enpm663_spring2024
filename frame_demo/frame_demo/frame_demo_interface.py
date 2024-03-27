@@ -110,12 +110,12 @@ class ListenerDemo(Node):
 
         self.get_logger().info("Listener demo started")
 
-        # Create a transform buffer and listener
-        self._tf_buffer = Buffer()
-        self._tf_listener = TransformListener(self._tf_buffer, self)
+        # # Create a transform buffer and listener
+        # self._tf_buffer = Buffer()
+        # self._tf_listener = TransformListener(self._tf_buffer, self)
 
-        # Listen to the transform between frames periodically
-        self._listener_timer = self.create_timer(1, self._listener_cb)
+        # # Listen to the transform between frames periodically
+        # self._listener_timer = self.create_timer(1, self._listener_cb)
 
     def _listener_cb(self):
         """
@@ -224,7 +224,7 @@ class KDLFrameDemo(Node):
         camera_y = camera_pose_in_world_frame.position.y
         camera_z = camera_pose_in_world_frame.position.z
 
-        frame1 = PyKDL.Frame(
+        frame_camera_world = PyKDL.Frame(
             PyKDL.Rotation.Quaternion(
                 camera_orientation.x,
                 camera_orientation.y,
@@ -240,7 +240,7 @@ class KDLFrameDemo(Node):
         part_y = part_pose_in_camera_frame.position.y
         part_z = part_pose_in_camera_frame.position.z
 
-        frame2 = PyKDL.Frame(
+        frame_part_camera = PyKDL.Frame(
             PyKDL.Rotation.Quaternion(
                 part_orientation.x,
                 part_orientation.y,
@@ -251,15 +251,15 @@ class KDLFrameDemo(Node):
         )
 
         # Multiply the two frames
-        frame3 = frame1 * frame2
+        frame_part_world = frame_camera_world * frame_part_camera
 
         # return the resulting pose from frame3
         pose = Pose()
-        pose.position.x = frame3.p.x()
-        pose.position.y = frame3.p.y()
-        pose.position.z = frame3.p.z()
+        pose.position.x = frame_part_world.p.x()
+        pose.position.y = frame_part_world.p.y()
+        pose.position.z = frame_part_world.p.z()
 
-        q = frame3.M.GetQuaternion()
+        q = frame_part_world.M.GetQuaternion()
         pose.orientation.x = q[0]
         pose.orientation.y = q[1]
         pose.orientation.z = q[2]
@@ -317,6 +317,11 @@ class BroadcasterDemo(Node):
 
         sim_time = Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
         self.set_parameters([sim_time])
+        
+        # Get the listen parameter
+        self._listen_param = (
+            self.declare_parameter("listen", False).get_parameter_value().bool_value
+        )
 
         # List of parts detected in the left and right bins
         # These lists contain AdvancedLogicalCameraImage objects
@@ -359,12 +364,13 @@ class BroadcasterDemo(Node):
         # Create a dynamic broadcaster
         self._tf_dynamic_broadcaster = TransformBroadcaster(self)
         
+        if self._listen_param:
         # Create a transform buffer and listener
-        self._tf_buffer = Buffer()
-        self._tf_listener = TransformListener(self._tf_buffer, self)
+            self._tf_buffer = Buffer()
+            self._tf_listener = TransformListener(self._tf_buffer, self)
 
-        # Listen to the transform between frames periodically
-        self._listener_timer = self.create_timer(0.5, self._listener_cb)
+            # Listen to the transform between frames periodically
+            self._listener_timer = self.create_timer(0.5, self._listener_cb)
 
         self.get_logger().info("Broadcaster demo started")
 
