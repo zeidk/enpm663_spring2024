@@ -1,4 +1,4 @@
-import math
+
 from typing import Tuple
 import rclpy
 import PyKDL
@@ -8,6 +8,8 @@ from geometry_msgs.msg import TransformStamped, Pose, Quaternion
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
+import tf2_ros
+import math
 from ariac_msgs.msg import (
     AdvancedLogicalCameraImage as AriacAdvancedLogicalCameraImage,
     Part as AriacPart,
@@ -16,7 +18,7 @@ from rclpy.qos import qos_profile_sensor_data
 from rclpy.parameter import Parameter
 
 
-def rpy_from_quaternion(quaternion: Quaternion) -> Tuple[float, float, float]:
+def euler_from_quaternion(quaternion: Quaternion) -> Tuple[float, float, float]:
     """
     Use KDL to convert a quaternion to euler angles roll, pitch, yaw.
     Args:
@@ -58,121 +60,20 @@ def quaternion_from_euler(
 
     return quaternion
 
+def quaternion_to_euler(quaternion):
+    euler = tf2_ros.transformations.euler_from_quaternion(
+        [quaternion.x, quaternion.y, quaternion.z, quaternion.w]
+    )
+    roll, pitch, yaw = euler
+    
+    output = "\n"
+    output += "=" * 50 + "\n"
+    output += f"Roll: : {math.degrees(roll)}\n"
+    output += f"Pitch: : {math.degrees(pitch)}\n"
+    output += f"Yaw: : {math.degrees(yaw)}\n"
+    output += "=" * 50 + "\n"
 
-# class KDLFrameDemo(Node):
-#     """
-#     Class showing how to use KDL Frame to compute the pose of a part in the 'world' frame.
-#     """
-
-#     def __init__(self, node_name):
-#         super().__init__(node_name)
-
-#         self.get_logger().info("KDL demo started")
-
-#         self._camera_pose_in_world = self.set_camera_pose_in_world()
-#         self._part_pose_in_camera = self.set_part_pose_in_camera()
-#         self._part_pose_in_world = self.multiply_pose(
-#             self._camera_pose_in_world, self._part_pose_in_camera
-#         )
-
-#         self._rpy = rpy_from_quaternion(self._part_pose_in_world.orientation)
-
-#         self.get_logger().info(
-#             f"Part position in world frame: \n x: {self._part_pose_in_world.position.x}, y: {self._part_pose_in_world.position.y}, z: {self._part_pose_in_world.position.z}"
-#         )
-#         self.get_logger().info(
-#             f"Part orientation in world frame: \n rpy: {self._rpy[0]}, {self._rpy[1]}, {self._rpy[2]}"
-#         )
-
-#     def set_camera_pose_in_world(self):
-#         """
-#         Set the pose of the camera in the world frame.
-#         Information about the camera pose can be obtained in two different ways:
-
-#             - From the sensors.yaml file
-#             - By clicking on the camera in gazebo.
-
-#         Returns:
-#             Pose: The pose of the camera in the world frame
-#         """
-
-#         # Create a pose object for right_bins_camera
-#         pose = Pose()
-#         pose.position.x = -2.286
-#         pose.position.y = 2.96
-#         pose.position.z = 1.8
-
-#         quat_x, quat_y, quat_z, quat_w = quaternion_from_euler(math.pi, math.pi / 2, 0)
-#         pose.orientation.x = quat_x
-#         pose.orientation.y = quat_y
-#         pose.orientation.z = quat_z
-#         pose.orientation.w = quat_w
-
-#         return pose
-
-#     def set_part_pose_in_camera(self):
-#         """
-#         Set the pose of the part detected by the camera.
-#         Information about the part pose should be obtained from the camera subscriber.
-#         Here we are hardcoding this information for the sake of simplicity.
-#         The hardcoded pose was retrieved directly from gazebo.
-
-#         Returns:
-#             Pose: The pose of the part in the camera frame
-#         """
-#         pose = Pose()
-#         pose.position.x = 1.0769784427063858
-#         pose.position.y = 0.15500024548461805
-#         pose.position.z = -0.5660066794253416
-
-#         pose.orientation.x = -0.0013258319361092675
-#         pose.orientation.y = -0.7083612841685344
-#         pose.orientation.z = -0.0013332542580505244
-#         pose.orientation.w = 0.7058475442288268
-
-#         return pose
-
-#     def multiply_pose(self, pose1: Pose, pose2: Pose) -> Pose:
-#         """
-#         Use KDL to multiply two poses together.
-#         Args:
-#             p1 (Pose): Pose of the first frame
-#             p2 (Pose): Pose of the second frame
-#         Returns:
-#             Pose: Pose of the resulting frame
-#         """
-
-#         orientation1 = pose1.orientation
-#         frame1 = PyKDL.Frame(
-#             PyKDL.Rotation.Quaternion(
-#                 orientation1.x, orientation1.y, orientation1.z, orientation1.w
-#             ),
-#             PyKDL.Vector(pose1.position.x, pose1.position.y, pose1.position.z),
-#         )
-
-#         orientation2 = pose2.orientation
-#         frame2 = PyKDL.Frame(
-#             PyKDL.Rotation.Quaternion(
-#                 orientation2.x, orientation2.y, orientation2.z, orientation2.w
-#             ),
-#             PyKDL.Vector(pose2.position.x, pose2.position.y, pose2.position.z),
-#         )
-
-#         frame3 = frame1 * frame2
-
-#         # return the resulting pose from frame3
-#         pose = Pose()
-#         pose.position.x = frame3.p.x()
-#         pose.position.y = frame3.p.y()
-#         pose.position.z = frame3.p.z()
-
-#         q = frame3.M.GetQuaternion()
-#         pose.orientation.x = q[0]
-#         pose.orientation.y = q[1]
-#         pose.orientation.z = q[2]
-#         pose.orientation.w = q[3]
-
-#         return pose
+    return roll, pitch, yaw
 
 
 class ListenerDemo(Node):
@@ -317,6 +218,7 @@ class KDLFrameDemo(Node):
     def compute_part_pose_in_world(
         self, part_pose_in_camera_frame, camera_pose_in_world_frame
     ):
+        # First frame
         camera_orientation = camera_pose_in_world_frame.orientation
         camera_x = camera_pose_in_world_frame.position.x
         camera_y = camera_pose_in_world_frame.position.y
@@ -332,6 +234,7 @@ class KDLFrameDemo(Node):
             PyKDL.Vector(camera_x, camera_y, camera_z),
         )
 
+        # Second frame
         part_orientation = part_pose_in_camera_frame.orientation
         part_x = part_pose_in_camera_frame.position.x
         part_y = part_pose_in_camera_frame.position.y
@@ -347,6 +250,7 @@ class KDLFrameDemo(Node):
             PyKDL.Vector(part_x, part_y, part_z),
         )
 
+        # Multiply the two frames
         frame3 = frame1 * frame2
 
         # return the resulting pose from frame3
@@ -361,7 +265,8 @@ class KDLFrameDemo(Node):
         pose.orientation.z = q[2]
         pose.orientation.w = q[3]
 
-        rpy = rpy_from_quaternion(pose.orientation)
+        # Print the pose
+        rpy = euler_from_quaternion(pose.orientation)
         output = "\n"
         output += "=" * 50 + "\n"
         output += f"Part position in world frame: \n x: {pose.position.x}, y: {pose.position.y}, z: {pose.position.z}\n"
@@ -384,9 +289,6 @@ class KDLFrameDemo(Node):
             self._left_bins_camera_pose_in_world = msg.sensor_pose
 
         for part_pose in msg.part_poses:
-            # self.get_logger().info(
-            #     f"Part detected in left bins: {part_pose.part.type} {part_pose.part.color}"
-            # )
             self._left_bin_parts.append(part_pose)
 
     def right_bins_camera_callback(self, msg: AriacAdvancedLogicalCameraImage):
@@ -402,9 +304,6 @@ class KDLFrameDemo(Node):
             self._right_bins_camera_pose_in_world = msg.sensor_pose
 
         for part_pose in msg.part_poses:
-            # self.get_logger().info(
-            #     f"Part detected in right bins: {part_pose.part.type} {part_pose.part.color}"
-            # )
             self._right_bin_parts.append(part_pose)
 
 
@@ -459,6 +358,13 @@ class BroadcasterDemo(Node):
 
         # Create a dynamic broadcaster
         self._tf_dynamic_broadcaster = TransformBroadcaster(self)
+        
+        # Create a transform buffer and listener
+        self._tf_buffer = Buffer()
+        self._tf_listener = TransformListener(self._tf_buffer, self)
+
+        # Listen to the transform between frames periodically
+        self._listener_timer = self.create_timer(0.5, self._listener_cb)
 
         self.get_logger().info("Broadcaster demo started")
 
@@ -562,3 +468,27 @@ class BroadcasterDemo(Node):
         transform_stamped.transform.rotation.w = pose.orientation.w
 
         self._transforms.append(transform_stamped)
+
+    def _listener_cb(self):
+        """
+        Callback function for the listener timer.
+        """
+        try:
+            
+            if self._part_parent_frame is None:
+                self.get_logger().warn("Part parent frame is not set.")
+                return
+            
+            # Get the transform between frames
+            transform = self._tf_buffer.lookup_transform(
+                "world", self._part_frame, rclpy.time.Time()
+            )
+
+            self.get_logger().info(
+                f"Transform between world and {self._part_frame}: \n"
+                + str(transform)
+            )
+        except TransformException as ex:
+            self.get_logger().fatal(
+                f"Could not get transform between world and {self._part_frame}: {str(ex)}"
+            )
