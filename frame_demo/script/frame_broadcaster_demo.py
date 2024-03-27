@@ -6,13 +6,13 @@ from frame_demo.frame_demo_interface import BroadcasterDemo
 
 def main(args=None):
     rclpy.init(args=args)
-    regular_broadcaster = BroadcasterDemo("broadcaster_demo")
+    broadcaster = BroadcasterDemo("broadcaster_demo")
 
     try:
-        rclpy.spin(regular_broadcaster)
+        rclpy.spin(broadcaster)
     except KeyboardInterrupt:
-        regular_broadcaster.get_logger().info("KeyboardInterrupt, shutting down.\n")
-    regular_broadcaster.destroy_node()
+        broadcaster.get_logger().info("KeyboardInterrupt, shutting down.\n")
+    broadcaster.destroy_node()
     rclpy.shutdown()
 
 
